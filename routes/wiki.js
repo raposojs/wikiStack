@@ -5,11 +5,12 @@ var Page = models.Page;
 var User = models.User;
 
 router.get('/', function(req,res){
-	res.redirect('/')
+	res.render('index')
+	//res.render('index', {pages: Page})
 })
 
 router.post('/', function(req,res){
-	
+
 	var page = Page.build({
 		title: req.body.title,
 		content: req.body.content,
@@ -17,20 +18,40 @@ router.post('/', function(req,res){
 	})
 
 	page.save()
-	.then(function(send){
-		res.redirect('/')
+	.then(function(savedPage){
+		res.redirect(savedPage.route)
 	})
 	.catch(console.error)
 
 })
 
+
 router.get('/add', function(req,res){
-	res.render('../views/addpage')
+	res.render('addpage')
 })
 
 
+router.get('/:url', function(req,res,next){
+  Page.findOne({ 
+	    where: { 
+	      urlTitle: req.params.url 
+	    } 
+	  })
+	  .then(function(foundPage){
+	    //res.json(foundPage);
+	    // res.render("addpage")
+	    // res.json(foundPage.id)
+	    // var locals = {
+	    // 	title: foundPage.title
 
-router.get('/')
+	    // }
+	    res.render('wikipage', {title: foundPage.title, content: foundPage.content})
+	  })
+	  .catch(next);
+
+})
+
+
 
 
 module.exports = router;

@@ -2,6 +2,8 @@ var Sequelize = require('sequelize');
 var db = new Sequelize('postgres://localhost:5432/wikistack', {
     logging: false
 });
+
+
 var urlTitleMaker = function(st){
 	var newStr = ''
 	if(st){
@@ -35,14 +37,15 @@ var Page = db.define('page'/*<== model that will be trans. to table*/, {
 }, 
 
 {
-	getterMethods: function(){
-		var urlName = this.getDataValue('urlTitle')
-		return "/wiki/" + urlName
+	getterMethods: {
+		route: function(){
+			return "/wiki/" + this.urlTitle
+		}
 	}, 
 	
 	hooks: {
-		beforeValidate: function(page, options){
-			page.urlName = urlTitleMaker(page.title)	
+		beforeValidate: function(page){
+			page.urlTitle = urlTitleMaker(page.title)	
 		} 
 
 		}

@@ -35,7 +35,8 @@ swig.setDefaults({cache: false});
 
 // PAY ATTENTION ON ORDER!!!!
 app.use('/wiki/',wikiRouter)
-
+	//      ^======User ^this router
+	
 models.User.sync({})
 .then(function () {
     return models.Page.sync({})
